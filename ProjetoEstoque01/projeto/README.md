@@ -32,7 +32,9 @@ Arvore de diretórios:
 - Criação de pacotes (packages) para organizar as classes e interfaces do sistema.
 
     Pacote `cliente`: Contém interface e classes relacionadas aos clientes do sistema.
+
     Pacote `produto`: Contém classes relacionadas aos produtos do sistema.
+
     Pacote `venda`: Contém classes relacionadas às vendas realizadas no sistema.
 
 - Interface:
@@ -63,5 +65,6 @@ As classes foram organizadas para desenvolvimento e produção da seguinte forma
 - `Cliente`: Natália Isabel
 - `Produtos`: Giulia Maia
 - `Vendas`: Giulia Maia e Natália Isabel
+
 
 
