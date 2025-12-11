@@ -1,6 +1,8 @@
 ## Documentação do Projeto
 Projeto desenvolvido para fins educacionais, na disciplina de Orientação a Objetos.
+
 Responsáveis: Natália Isabel e Giulia Maia.
+
 Professor: Eduardo Leal.
 
 Objetivo: Implementar um sistema de estoque simples utilizando conceitos de orientação a objetos em Java.
@@ -61,4 +63,5 @@ As classes foram organizadas para desenvolvimento e produção da seguinte forma
 - `Cliente`: Natália Isabel
 - `Produtos`: Giulia Maia
 - `Vendas`: Giulia Maia e Natália Isabel
+
 
