@@ -114,11 +114,10 @@ public class GerenciadorVendas {
         }
 
 
-        // registros externos da venda
+        // registro da venda
         produto.setQuantidade(produto.getQuantidade() - qtd); // baixa estoque
         cliente.adicionarCompra(); // soma compra no cliente
-        
-        // registro da venda após as validações
+
         Venda venda = new Venda(proximoId++, dataVenda, cliente, produto, qtd);
         vendas.add(venda);
 

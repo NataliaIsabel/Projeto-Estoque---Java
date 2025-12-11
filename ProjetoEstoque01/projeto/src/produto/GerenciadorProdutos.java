@@ -1,7 +1,10 @@
-// pacote referente ao produto, ou seja, os pacotes são as separações do projeto por pastas.
+
+
+
+// pacote referente ao produto (organização do projeto por pastas)
 package produto;
 
-// importações para manipulação das listas e leitura de dados
+// importações necessárias
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -9,11 +12,12 @@ import java.util.Scanner;
 
 public class GerenciadorProdutos {
 
-    // lista de produtos
+    // lista que armazena todos os produtos cadastrados
     private List<Produto> produtos = new ArrayList<>();
+    // ID automático que incrementa a cada novo produto
     private int proximoId = 1;
 
-    // menu das opções do produto
+    // menu principal de gerenciamento de produtos
     public void menu(Scanner sc) {
         int op;
         do {
@@ -34,41 +38,42 @@ public class GerenciadorProdutos {
                     incluirProduto(sc);
                     break;
                 case 2: 
-                    excluirProduto(sc);
+                    excluirProduto(sc); 
                     break;
                 case 3: 
-                    listarProdutos();
+                    listarProdutos(); 
                     break;
                 case 4: 
-                    atualizarEstoque(sc);
+                    atualizarEstoque(sc); 
                     break;
                 case 5: 
-                    buscarProduto(sc);
+                    buscarProduto(sc); 
                     break;
                 case 6: 
-                    calcularValorTotalEstoque();
+                    calcularValorTotalEstoque(); 
                     break;
                 case 7: 
-                    relatorioEstoqueBaixo(sc);
+                    relatorioEstoqueBaixo(sc); 
                     break;
                 case 0: 
-                    System.out.println("Voltando ao menu principal...");
+                    System.out.println("Voltando ao menu principal..."); 
                     break;
                 default: 
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opção inválida."); 
                     break;
             }
         } while (op != 0);
     }
 
+    //Cria objetos Produto, verifica duplicação e gera IDs automaticamente.
     public void incluirProduto(Scanner sc) {
-        sc.nextLine();
+        sc.nextLine(); // limpa buffer do Scanner
         System.out.print("Nome: ");
         String nome = sc.nextLine();
 
-        // verificar duplicação
+        // verifica se já existe produto com o mesmo nome
         for (Produto p : produtos) {
-            if (p.getNome().equalsIgnoreCase(nome)) {
+            if (p.getNome().equalsIgnoreCase(nome)) { //comparar duas strings ignorando maiúsculas e minúsculas
                 System.out.println("Erro: nome já cadastrado!");
                 return;
             }
@@ -80,44 +85,50 @@ public class GerenciadorProdutos {
         System.out.print("Preço: ");
         double preco = sc.nextDouble();
 
-        // utilização do construtor
+        // cria produto com ID automático
         Produto p = new Produto(proximoId++, nome, qtd, preco);
 
-        // adicionar à lista
-        produtos.add(p);
+        produtos.add(p); // adiciona na lista
 
         System.out.println("Produto cadastrado!");
     }
 
+    //Remove um produto da lista depois de verificar se ele existe.
     public void excluirProduto(Scanner sc) {
         System.out.print("ID para excluir: ");
         int id = sc.nextInt();
 
         Produto p = buscarPorId(id);
+
         if (p == null) {
             System.out.println("Produto não encontrado.");
             return;
         }
 
-        // regra: não excluir se já foi vendido -> validado no gerenciador de vendas
+        // a regra de não excluir produtos vendidos é tratada no gerenciador de vendas
         produtos.remove(p);
         System.out.println("Produto removido.");
     }
 
     public Produto buscarPorId(int id) {
+        // percorre a lista procurando o ID
         for (Produto p : produtos) {
             if (p.getId() == id) return p;
         }
         return null;
     }
 
+
+    //Mostra todos os produtos cadastrados e indica quando estão sem estoque
     public void listarProdutos() {
         System.out.println("\n--- LISTA DE PRODUTOS ---");
+
         if (produtos.isEmpty()) {
             System.out.println("Nenhum produto cadastrado.");
             return;
         }
 
+        // mostra aviso quando o estoque é zero
         for (Produto p : produtos) {
             if (p.getQuantidade() == 0)
                 System.out.println(p + " -> [SEM ESTOQUE]");
@@ -126,9 +137,12 @@ public class GerenciadorProdutos {
         }
     }
 
+
+    //Adiciona ou remove quantidade, impedindo que o estoque fique negativo.
     public void atualizarEstoque(Scanner sc) {
         System.out.print("ID do produto: ");
         int id = sc.nextInt();
+
         Produto p = buscarPorId(id);
 
         if (p == null) {
@@ -136,9 +150,10 @@ public class GerenciadorProdutos {
             return;
         }
 
-        System.out.print("Quantidade a adicionar/remover (colocar na frente: (+/-))\nR: ");
+        System.out.print("Quantidade a adicionar/remover (use + ou -):\nR: ");
         int valor = sc.nextInt();
 
+        // impede estoque negativo
         if (p.getQuantidade() + valor < 0) {
             System.out.println("Erro: estoque negativo.");
             return;
@@ -148,14 +163,16 @@ public class GerenciadorProdutos {
         System.out.println("Estoque atualizado!");
     }
 
+
+    //Busca tanto por ID quanto por nome ou parte do nome.
     public void buscarProduto(Scanner sc) {
-        sc.nextLine();
+        sc.nextLine(); // limpa buffer
         System.out.print("Nome, parte do nome ou ID: ");
         String termo = sc.nextLine();
 
-        // Tentativa de busca por ID
+        // primeiro tenta identificar se o termo é um número (ID)
         try {
-            int id = Integer.parseInt(termo);   // se for número, entra aqui
+            int id = Integer.parseInt(termo);
             Produto p = buscarPorId(id);
 
             if (p != null) {
@@ -164,16 +181,16 @@ public class GerenciadorProdutos {
             } else {
                 System.out.println("Nenhum produto encontrado com esse ID.");
             }
-            return; // retorna antes de buscar o número
+            return; // encerra para não fazer busca pelo nome
         } catch (NumberFormatException e) {
-            // vai passar para busca por nome ou parte dele
+            // não é número -> continua para busca por nome
         }
 
-        // Busca por nome ou parte do nome
         boolean achou = false;
 
         System.out.println("\nResultado da busca:");
         for (Produto p : produtos) {
+            // compara parte do nome ignorando maiúsculas/minúsculas
             if (p.getNome().toLowerCase().contains(termo.toLowerCase())) {
                 System.out.println(p);
                 achou = true;
@@ -185,9 +202,12 @@ public class GerenciadorProdutos {
         }
     }
 
+
+    //Soma o preço × quantidade de todos os produtos
     public void calcularValorTotalEstoque() {
         double total = 0;
 
+        // valor total = soma de (quantidade × preço)
         for (Produto p : produtos) {
             total += p.getQuantidade() * p.getPreco();
         }
@@ -195,37 +215,31 @@ public class GerenciadorProdutos {
         System.out.printf("Valor total do estoque: R$ %.2f\n", total);
     }
 
+
+    //Mostra produtos que estão abaixo de um limite informado
     public void relatorioEstoqueBaixo(Scanner sc) {
-    System.out.print("Informe a quantidade de produtos para estoque baixo: ");
-    int limite = sc.nextInt();
+        System.out.print("Informe a quantidade de produtos para estoque baixo: ");
+        int limite = sc.nextInt();
 
-    // define como não encontrado, 
-    // mas tem manipulação caso encontre os dados para tornar 'true' 
-    // (que seria quando encontra os produtos no array)
-    boolean achou = false;
+        boolean achou = false;
 
-    System.out.println("\n--- PRODUTOS COM ESTOQUE BAIXO ---");
+        System.out.println("\n--- PRODUTOS COM ESTOQUE BAIXO ---");
 
-    for (Produto p : produtos) {
-        if (p.getQuantidade() <= limite) {
-            System.out.println(p);
-            achou = true;
+        for (Produto p : produtos) {
+            if (p.getQuantidade() <= limite) {
+                System.out.println(p);
+                achou = true;
+            }
+        }
+
+        if (!achou) {
+            System.out.println("Nenhum produto com estoque igual ou inferior a " + limite + ".");
         }
     }
 
-    // se não encontrou 
-    if (!achou) {
-        System.out.println("Nenhum produto com estoque igual ou inferior a " + limite + ".");
-    }
-}
-
-
-
-    // método get para retornar a lista de produtos
+    // retorna a lista completa de produtos (útil para outras classes)
     public List<Produto> getProdutos() {
         return produtos;
     }
-
-
 
 }
